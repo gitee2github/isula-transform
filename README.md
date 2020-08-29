@@ -1,37 +1,52 @@
 # isula-transform
 
-#### 介绍
-isula transform kit transform specify docker container to iSulad container
+## Description
 
-#### 软件架构
-软件架构说明
+`isula-transform` is a tool which converts the configuration of the docker container to a type that isulad can recognize as being loaded.
 
+## Build and Installation
 
-#### 安装教程
+Before building, ensure that [Golang](https://golang.org/) 1.13 or later and [lcr](https://gitee.com/openeuler/lcr) 2.0.1 or later are installed successfully.
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+Just execute `sudo make && sudo make install` in the code root directory and enjoy it.
 
-#### 使用说明
+## Instructions
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+Basic usage of isula-transform:
 
-#### 参与贡献
+``` txt
+NAME:
+   isula-transform - transform specify docker container type configuration to iSulad type
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+USAGE:
+   [global options] --all|container_id[ container_id...]
 
+COMMANDS:
+   help, h  Shows a list of commands or help for one command
 
-#### 码云特技
+GLOBAL OPTIONS:
+   --log value                 specific output log file path (default: "/var/log/isula-kits/transform.log")
+   --log-level value           Customize the level of logging for collection, allowed: debug, info, warn, error (default: "info")
+   --isulad-config-file value  iSulad configuration file path (default: "/etc/isulad/daemon.json")
+   --docker-graph value        graph root of docker (default: "/var/lib/docker")
+   --docker-state value        state root of docker (default: "/var/run/docker")
+   --all                       transform all containers
+   --help, -h                  show help
+   --version, -v               print the version
+```
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+### NOTE
+
+There are a few things to note about using `isula-transform` :
+
+- currently, only docker 18.09 containers are supported to transform to isulad container
+- due to isulad's lack of native network capability, docker container needs to configure host network
+- `isula-transform` will read the container's OCI configuration, which requires the docker container to be in a pause or running state,  and to be paused if it is in a running state
+
+## Contributions
+
+We always welcome new contributors. And we are happy to provide guidance for the new contributors.
+
+## Licensing
+
+`isula-transform` is licensed under the [Mulan PSL v2](https://license.coscl.org.cn/MulanPSL2/index.html).
