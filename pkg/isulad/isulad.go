@@ -10,7 +10,7 @@
  * Create: 2020-04-24
  */
 
-package transform
+package isulad
 
 import (
 	"encoding/json"
@@ -24,6 +24,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sys/unix"
+	"isula.org/isula-transform/transform"
 	"isula.org/isula-transform/types"
 )
 
@@ -50,8 +51,8 @@ type IsuladTool struct {
 	runtime   string
 
 	// storage
-	storageType   StorageType
-	storageDriver BaseStorageDriver
+	storageType   transform.StorageType
+	storageDriver transform.BaseStorageDriver
 }
 
 func init() {
@@ -72,7 +73,7 @@ func InitIsuladTool(graphRoot, runtime, storageDriver, imageSrvAddr string) erro
 	commonTool = &IsuladTool{
 		graphRoot:   graphRoot,
 		runtime:     runtime,
-		storageType: StorageType(storageDriver),
+		storageType: transform.StorageType(storageDriver),
 	}
 
 	if err := checkToolConfigValid(); err != nil {
@@ -85,18 +86,18 @@ func InitIsuladTool(graphRoot, runtime, storageDriver, imageSrvAddr string) erro
 		return errors.Wrap(err, "init global base storage driver failed")
 	}
 
-	commonTool.storageDriver = gBaseStorageDriver
+	commonTool.storageDriver = globalIsuladStorageDriver
 
 	return nil
 }
 
 // GetIsuladCfgTool returns the global isuladtool
-func GetIsuladCfgTool() *IsuladTool {
+func GetIsuladTool() *IsuladTool {
 	return commonTool
 }
 
 func checkToolConfigValid() error {
-	g := GetIsuladCfgTool()
+	g := GetIsuladTool()
 	// runtime
 	switch g.runtime {
 	case defaultRuntime:
@@ -105,7 +106,7 @@ func checkToolConfigValid() error {
 	}
 	// storage driver
 	switch g.storageType {
-	case Overlay2, DeviceMapper:
+	case transform.Overlay2, transform.DeviceMapper:
 	default:
 		return fmt.Errorf("not support storage driver: %s", g.runtime)
 	}
@@ -113,12 +114,12 @@ func checkToolConfigValid() error {
 }
 
 // StorageType returns the storage type of isulad
-func (ict *IsuladTool) StorageType() StorageType {
+func (ict *IsuladTool) StorageType() transform.StorageType {
 	return ict.storageType
 }
 
 // BaseStorageDriver returns the global base storage driver tool
-func (ict *IsuladTool) BaseStorageDriver() BaseStorageDriver {
+func (ict *IsuladTool) BaseStorageDriver() transform.BaseStorageDriver {
 	return ict.storageDriver
 }
 

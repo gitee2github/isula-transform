@@ -10,7 +10,7 @@
  * Create: 2020-04-24
  */
 
-package transform
+package isulad
 
 import (
 	"context"
@@ -29,7 +29,7 @@ const (
 
 func TestBaseStorageDriverCreate(t *testing.T) {
 	ic := new(mockImgClient)
-	sd := baseStorageDriver{imgClient: ic}
+	sd := isuladStorageDriver{imgClient: ic}
 	ic.remove = func(ctx context.Context, in *isula.ContainerRemoveRequest, opts ...grpc.CallOption) (*isula.ContainerRemoveResponse, error) {
 		return &isula.ContainerRemoveResponse{Errmsg: "remove no error"}, nil
 	}
@@ -70,7 +70,7 @@ func TestBaseStorageDriverCreate(t *testing.T) {
 
 func TestBaseStorageDriver_MountRootFs(t *testing.T) {
 	ic := new(mockImgClient)
-	sd := baseStorageDriver{imgClient: ic}
+	sd := isuladStorageDriver{imgClient: ic}
 	Convey("TestBaseStorageDriver_MountRootFs", t, func() {
 		Convey("mount return err", func() {
 			errContent := "err: image client mount failed"
@@ -104,7 +104,7 @@ func TestBaseStorageDriver_MountRootFs(t *testing.T) {
 
 func TestBaseStorageDriver_UmountRootFs(t *testing.T) {
 	ic := new(mockImgClient)
-	sd := baseStorageDriver{imgClient: ic}
+	sd := isuladStorageDriver{imgClient: ic}
 	Convey("TestBaseStorageDriver_UmountRootFs", t, func() {
 		Convey("umount return err", func() {
 			errContent := "err: image client umount failed"

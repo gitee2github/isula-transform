@@ -10,7 +10,7 @@
  * Create: 2020-04-24
  */
 
-package transform
+package isulad
 
 import (
 	"io/ioutil"
@@ -20,6 +20,7 @@ import (
 
 	. "github.com/smartystreets/goconvey/convey"
 	"golang.org/x/sys/unix"
+	"isula.org/isula-transform/transform"
 	"isula.org/isula-transform/types"
 )
 
@@ -28,7 +29,7 @@ const itTestCtrID = "isulatransformittestctr"
 var testIsuladTool = &IsuladTool{
 	graphRoot:   "/var/lib/isulad",
 	runtime:     "lcr",
-	storageType: Overlay2,
+	storageType: transform.Overlay2,
 }
 
 func TestInitIsuladTool(t *testing.T) {
@@ -47,10 +48,10 @@ func TestInitIsuladTool(t *testing.T) {
 
 		Convey("default init", func() {
 			So(InitIsuladTool("", "", "", ""), ShouldBeNil)
-			So(GetIsuladCfgTool().graphRoot, ShouldEqual, testIsuladTool.graphRoot)
-			So(GetIsuladCfgTool().runtime, ShouldEqual, testIsuladTool.runtime)
-			So(GetIsuladCfgTool().storageType, ShouldEqual, testIsuladTool.storageType)
-			So(GetIsuladCfgTool().storageDriver, ShouldNotBeNil)
+			So(GetIsuladTool().graphRoot, ShouldEqual, testIsuladTool.graphRoot)
+			So(GetIsuladTool().runtime, ShouldEqual, testIsuladTool.runtime)
+			So(GetIsuladTool().storageType, ShouldEqual, testIsuladTool.storageType)
+			So(GetIsuladTool().storageDriver, ShouldNotBeNil)
 		})
 	})
 }
@@ -58,7 +59,7 @@ func TestInitIsuladTool(t *testing.T) {
 func TestIsuladTool_GetterFunc(t *testing.T) {
 	Convey("TestIsuladTool_GetterFunc", t, func() {
 		Convey("StorageType", func() {
-			So(testIsuladTool.StorageType(), ShouldEqual, Overlay2)
+			So(testIsuladTool.StorageType(), ShouldEqual, transform.Overlay2)
 		})
 
 		Convey("BaseStorageDriver", func() {

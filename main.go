@@ -24,6 +24,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 	"gopkg.in/natefinch/lumberjack.v2"
+	"isula.org/isula-transform/pkg/isulad"
 	"isula.org/isula-transform/transform"
 	_ "isula.org/isula-transform/transform/register"
 	"isula.org/isula-transform/utils"
@@ -36,6 +37,8 @@ const (
 
 	maxConcurrentTransform = 128
 	maxPerLogFileSize      = 10 // megabytes
+
+	isuladConfFIle = "/etc/isulad/daemon.json"
 )
 
 var (
@@ -117,30 +120,29 @@ func transformInit(ctx *cli.Context) error {
 		StorageDriver string `json:"storage-driver"`
 		ImageServer   string `json:"image-server-sock-addr"`
 	}{}
-	iSuladCfgFile := ctx.GlobalString("isulad-config-file")
-	if err := utils.CheckFileValid(iSuladCfgFile); err != nil {
+	if err := utils.CheckFileValid(isuladConfFIle); err != nil {
 		return errors.Wrapf(err, "check isulad daemon config failed")
 	}
-	iSuladCfgData, err := ioutil.ReadFile(iSuladCfgFile)
+	iSuladCfgData, err := ioutil.ReadFile(isuladConfFIle)
 	if err != nil {
-		logrus.Errorf("read isulad daemon config failed: %v, file path: %s", err, iSuladCfgFile)
+		logrus.Errorf("read isulad daemon config failed: %v, file path: %s", err, isuladConfFIle)
 		return errors.Wrapf(err, "read isulad daemon config failed")
 	}
 	err = json.Unmarshal(iSuladCfgData, &iSuladCfg)
 	if err != nil {
-		logrus.Errorf("unmarshal isulad daemon config failed: %v, file path: %s", err, iSuladCfgFile)
+		logrus.Errorf("unmarshal isulad daemon config failed: %v, file path: %s", err, isuladConfFIle)
 		return errors.Wrapf(err, "unmarshal isulad daemon config failed")
 	}
 
 	logrus.Debugf("isulad daemon config: %+v", iSuladCfg)
-	err = transform.InitIsuladTool(iSuladCfg.Graph, iSuladCfg.Runtime, iSuladCfg.StorageDriver, iSuladCfg.ImageServer)
+	err = isulad.InitIsuladTool(iSuladCfg.Graph, iSuladCfg.Runtime, iSuladCfg.StorageDriver, iSuladCfg.ImageServer)
 	if err != nil {
 		return errors.Wrapf(err, "transform init failed")
 	}
 	if iSuladCfg.LogDriver != "file" {
 		logrus.Infof("isula daemon log driver is %s, can't redirect to file", iSuladCfg.LogDriver)
 	} else {
-		transform.LcrLogInit(iSuladCfg.State, iSuladCfg.Runtime, iSuladCfg.LogLevel)
+		isulad.LcrLogInit(iSuladCfg.State, iSuladCfg.Runtime, iSuladCfg.LogLevel)
 	}
 	return nil
 }

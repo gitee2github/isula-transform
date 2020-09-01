@@ -30,6 +30,7 @@ import (
 	"github.com/opencontainers/runtime-spec/specs-go"
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/urfave/cli"
+	"isula.org/isula-transform/pkg/isulad"
 	"isula.org/isula-transform/transform"
 	"isula.org/isula-transform/types"
 )
@@ -277,7 +278,7 @@ func Test_dockerConfigEngine_transformOciConfig(t *testing.T) {
 
 		Convey("transform successfully", func() {
 			var (
-				basePath   = transform.GetIsuladCfgTool().GetRuntimePath() + transformTestCtrID
+				basePath   = isulad.GetIsuladTool().GetRuntimePath() + transformTestCtrID
 				hostname   = basePath + "/hostname"
 				hosts      = basePath + "/hosts"
 				resolvconf = basePath + "/resolv.conf"
@@ -361,7 +362,7 @@ func Test_dockerTransformer_initStorageDriver(t *testing.T) {
 	dt := &dockerTransformer{}
 	Convey("Test_dockerTransformer_initStorageDriver", t, func() {
 		Convey("overlay2 driver", func() {
-			err := transform.InitIsuladTool("", "", "overlay2", "")
+			err := isulad.InitIsuladTool("", "", "overlay2", "")
 			So(err, ShouldBeNil)
 			ol, err := dt.initStorageDriver()
 			So(err, ShouldBeNil)
@@ -370,7 +371,7 @@ func Test_dockerTransformer_initStorageDriver(t *testing.T) {
 		})
 
 		Convey("devicemapper driver", func() {
-			err := transform.InitIsuladTool("", "", "devicemapper", "")
+			err := isulad.InitIsuladTool("", "", "devicemapper", "")
 			So(err, ShouldBeNil)
 			ol, err := dt.initStorageDriver()
 			So(err, ShouldBeNil)
@@ -500,8 +501,8 @@ func initDockerTransformTest(repalceVar, id, src, dest string, initIsuladTool bo
 	}
 	if initIsuladTool {
 		graph := filepath.Join(repalceVar + "/lib/isulad")
-		_ = transform.InitIsuladTool(graph, "", "", "")
-		return transform.GetIsuladCfgTool().PrepareBundleDir(id)
+		_ = isulad.InitIsuladTool(graph, "", "", "")
+		return isulad.GetIsuladTool().PrepareBundleDir(id)
 	}
 	return nil
 }
