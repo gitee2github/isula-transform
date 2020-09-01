@@ -7,7 +7,7 @@ BEP_DIR=/tmp/isula-transform-build-bep
 BEP_FLAGS=-tmpdir=$(BEP_DIR)
 
 TAGS="cgo static_build"
-LDFLAGS="-s -w -buildid=IdByiSula -buildmode=pie -extldflags=-zrelro -extldflags=-znow $(BEP_FLAGS) -X main.version=$(VERSION) -X main.gitCommit=${COMMIT}"
+LDFLAGS="-buildid=IdByiSula -extldflags=-zrelro -extldflags=-znow $(BEP_FLAGS) -X main.version=$(VERSION) -X main.gitCommit=${COMMIT}"
 ENV=CGO_ENABLED=1
 GOMOD_ENV=GO111MODULE=on
 
@@ -20,8 +20,7 @@ bep:
 
 .PHONY: localbuild
 localbuild: bep
-	@go mod vendor
-	$(ENV) $(GOMOD_ENV) go build -tags $(TAGS) -ldflags $(LDFLAGS) -mod=vendor -o bin/$(NAME) .
+	$(ENV) $(GOMOD_ENV) go build -mod=vendor -buildmode=pie -tags $(TAGS) -ldflags $(LDFLAGS) -o bin/$(NAME) .
 	@rm -rf $(BEP_DIR)
 
 .PHONY: bin

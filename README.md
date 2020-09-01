@@ -27,7 +27,6 @@ COMMANDS:
 GLOBAL OPTIONS:
    --log value                 specific output log file path (default: "/var/log/isula-kits/transform.log")
    --log-level value           Customize the level of logging for collection, allowed: debug, info, warn, error (default: "info")
-   --isulad-config-file value  iSulad configuration file path (default: "/etc/isulad/daemon.json")
    --docker-graph value        graph root of docker (default: "/var/lib/docker")
    --docker-state value        state root of docker (default: "/var/run/docker")
    --all                       transform all containers

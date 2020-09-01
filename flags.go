@@ -31,11 +31,6 @@ var basicFlags = []cli.Flag{
 		Value:  "docker",
 		Hidden: true,
 	},
-	cli.StringFlag{
-		Name:  "isulad-config-file",
-		Usage: "iSulad configuration file path",
-		Value: "/etc/isulad/daemon.json",
-	},
 }
 
 var dockerFlags = []cli.Flag{

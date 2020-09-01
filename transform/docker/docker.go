@@ -36,6 +36,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 	"golang.org/x/sys/unix"
+	"isula.org/isula-transform/pkg/isulad"
 	"isula.org/isula-transform/transform"
 	"isula.org/isula-transform/types"
 	"isula.org/isula-transform/utils"
@@ -199,7 +200,7 @@ func (t *dockerTransformer) transform(id string, rb *rollback) error {
 	}
 
 	// init
-	iSulad := transform.GetIsuladCfgTool()
+	iSulad := isulad.GetIsuladTool()
 	retErr = iSulad.PrepareBundleDir(id)
 	if retErr != nil {
 		logrus.Errorf("prepare bundle dir failed: %v", retErr)
@@ -322,7 +323,7 @@ func (t *dockerTransformer) transformHostConfig(id string) (*types.IsuladHostCon
 	}
 
 	// reconcile and save
-	iSulad := transform.GetIsuladCfgTool()
+	iSulad := isulad.GetIsuladTool()
 	reconcileHostConfig(&isuladHostCfg, iSulad.Runtime())
 	err = iSulad.SaveConfig(id, &isuladHostCfg, iSulad.MarshalIndent, iSulad.GetHostCfgPath)
 	if err != nil {
@@ -367,7 +368,7 @@ func (t *dockerTransformer) transformV2Config(id string, opts ...v2ConfigReconci
 			State:        &iSuladState,
 		}
 
-		iSulad = transform.GetIsuladCfgTool()
+		iSulad = isulad.GetIsuladTool()
 	)
 
 	// load
@@ -454,7 +455,7 @@ func (t *dockerTransformer) transformOciConfig(id string,
 	reconcileOciConfig(&ociConfig, commonCfg, hostCfg)
 
 	// save
-	iSulad := transform.GetIsuladCfgTool()
+	iSulad := isulad.GetIsuladTool()
 	err = iSulad.SaveConfig(id, &ociConfig, iSulad.MarshalIndent, iSulad.GetOciConfigPath)
 	if err != nil {
 		logrus.Errorf("save v2 config to file %s failed", iSulad.GetOciConfigPath(id))
@@ -465,15 +466,15 @@ func (t *dockerTransformer) transformOciConfig(id string,
 }
 
 func (t *dockerTransformer) initStorageDriver() (transform.StorageDriver, error) {
-	isulad := transform.GetIsuladCfgTool()
-	switch isulad.StorageType() {
+	iSulad := isulad.GetIsuladTool()
+	switch iSulad.StorageType() {
 	case transform.Overlay2:
-		return newOverlayDriver(isulad.BaseStorageDriver()), nil
+		return newOverlayDriver(iSulad.BaseStorageDriver()), nil
 	case transform.DeviceMapper:
-		return newDeviceMapperDriver(isulad.BaseStorageDriver(), t.client), nil
+		return newDeviceMapperDriver(iSulad.BaseStorageDriver(), t.client), nil
 	default:
 	}
-	return nil, fmt.Errorf("unsupported storage driver type: %s", isulad.StorageType())
+	return nil, fmt.Errorf("unsupported storage driver type: %s", iSulad.StorageType())
 }
 
 func (t *dockerTransformer) initContainers() error {
