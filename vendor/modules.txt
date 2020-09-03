@@ -170,5 +170,5 @@ google.golang.org/protobuf/runtime/protoimpl
 google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
 google.golang.org/protobuf/types/known/timestamppb
-# gopkg.in/natefinch/lumberjack.v2 v2.0.0
+# gopkg.in/natefinch/lumberjack.v2 v2.0.1-0.20190411184413-94d9e492cc53
 gopkg.in/natefinch/lumberjack.v2

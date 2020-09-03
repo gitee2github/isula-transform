@@ -513,7 +513,7 @@ License: BSD-2-Clause
 Please see above.
 
 Software:  
-gopkg.in/natefinch/lumberjack.v2 v2.0.0  
+gopkg.in/natefinch/lumberjack.v2 v2.0.1-0.20190411184413-94d9e492cc53  
 Copyright notice:  
 Copyright (c) 2014 Nate Finch  
 License: MIT  

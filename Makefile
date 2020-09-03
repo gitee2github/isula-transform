@@ -30,7 +30,7 @@ bin: bep
 
 .PHONY: install
 install:
-	install -m 0750 ./bin/isula-transform  /usr/bin/isula-transform
+	install -m 0550 ./bin/isula-transform  /usr/bin/isula-transform
 
 .PHONY: binclean
 binclean:
