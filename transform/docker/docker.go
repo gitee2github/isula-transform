@@ -301,7 +301,6 @@ func (t *dockerTransformer) transformHostConfig(id string) (*types.IsuladHostCon
 		&l,
 	}
 
-	// load
 	hostCfgPath := filepath.Join(t.GraphRoot, "containers", id, types.Hostconfig)
 	err := utils.CheckFileValid(hostCfgPath)
 	if err != nil {
@@ -315,14 +314,12 @@ func (t *dockerTransformer) transformHostConfig(id string) (*types.IsuladHostCon
 		return nil, nil, errors.Wrap(err, "read hostconfig.json")
 	}
 
-	// Unmarshal to types.IsuladHostConfig
 	err = json.Unmarshal(data, &hostCfg)
 	if err != nil {
 		logrus.Errorf("can't unmarshal container %s's host config to iSulad type: %v", id, err)
 		return nil, nil, errors.Wrap(err, "unmarshal host config data")
 	}
 
-	// reconcile and save
 	iSulad := isulad.GetIsuladTool()
 	reconcileHostConfig(&isuladHostCfg, iSulad.Runtime())
 	err = iSulad.SaveConfig(id, &isuladHostCfg, iSulad.MarshalIndent, iSulad.GetHostCfgPath)
@@ -371,7 +368,6 @@ func (t *dockerTransformer) transformV2Config(id string, opts ...v2ConfigReconci
 		iSulad = isulad.GetIsuladTool()
 	)
 
-	// load
 	ctr, err := t.loadV2Config(id)
 	if err != nil {
 		logrus.Errorf("load container %s's v2 config failed: %v", id, err)
@@ -415,7 +411,6 @@ func (t *dockerTransformer) transformV2Config(id string, opts ...v2ConfigReconci
 		return nil, errors.Wrap(err, "generate new rootfs")
 	}
 
-	// save
 	err = iSulad.SaveConfig(id, &iSuladV2Cfg, iSulad.MarshalIndent, iSulad.GetConfigV2Path)
 	if err != nil {
 		logrus.Errorf("save v2 config to file %s failed", iSulad.GetConfigV2Path(id))

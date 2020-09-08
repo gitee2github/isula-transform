@@ -26,8 +26,8 @@ import (
 
 const itTestCtrID = "isulatransformittestctr"
 
-var testIsuladTool = &IsuladTool{
-	graphRoot:   "/var/lib/isulad",
+var testIsuladTool = &Tool{
+	graph:       "/var/lib/isulad",
 	runtime:     "lcr",
 	storageType: transform.Overlay2,
 }
@@ -35,20 +35,24 @@ var testIsuladTool = &IsuladTool{
 func TestInitIsuladTool(t *testing.T) {
 	Convey("TestInitIsuladTool", t, func() {
 		Convey("wrong container runtime", func() {
-			err := InitIsuladTool("", "kata", "", "")
+			err := InitIsuladTool(&DaemonConfig{
+				Runtime: "kata",
+			})
 			So(err, ShouldNotBeNil)
 			So(err.Error(), ShouldContainSubstring, "not support runtime")
 		})
 
 		Convey("wrong storage driver", func() {
-			err := InitIsuladTool("", "", "aufs", "")
+			err := InitIsuladTool(&DaemonConfig{
+				StorageDriver: "aufs",
+			})
 			So(err, ShouldNotBeNil)
 			So(err.Error(), ShouldContainSubstring, "not support storage driver")
 		})
 
 		Convey("default init", func() {
-			So(InitIsuladTool("", "", "", ""), ShouldBeNil)
-			So(GetIsuladTool().graphRoot, ShouldEqual, testIsuladTool.graphRoot)
+			So(InitIsuladTool(&DaemonConfig{}), ShouldBeNil)
+			So(GetIsuladTool().graph, ShouldEqual, testIsuladTool.graph)
 			So(GetIsuladTool().runtime, ShouldEqual, testIsuladTool.runtime)
 			So(GetIsuladTool().storageType, ShouldEqual, testIsuladTool.storageType)
 			So(GetIsuladTool().storageDriver, ShouldNotBeNil)

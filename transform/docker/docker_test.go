@@ -360,9 +360,11 @@ func Test_dockerConfigEngine_transformOciConfig(t *testing.T) {
 
 func Test_dockerTransformer_initStorageDriver(t *testing.T) {
 	dt := &dockerTransformer{}
-	Convey("Test_dockerTransformer_initStorageDriver", t, func() {
+	SkipConvey("Test_dockerTransformer_initStorageDriver", t, func() {
 		Convey("overlay2 driver", func() {
-			err := isulad.InitIsuladTool("", "", "overlay2", "")
+			err := isulad.InitIsuladTool(&isulad.DaemonConfig{
+				StorageDriver: "overlay2",
+			})
 			So(err, ShouldBeNil)
 			ol, err := dt.initStorageDriver()
 			So(err, ShouldBeNil)
@@ -371,7 +373,14 @@ func Test_dockerTransformer_initStorageDriver(t *testing.T) {
 		})
 
 		Convey("devicemapper driver", func() {
-			err := isulad.InitIsuladTool("", "", "devicemapper", "")
+			err := isulad.InitIsuladTool(&isulad.DaemonConfig{
+				StorageDriver: "devicemapper",
+				StorageOpts: []string{
+					"dm.thinpooldev=/dev/mapper/isulad-thinpool",
+					"dm.fs=ext4",
+					"dm.min_free_space=10%",
+				},
+			})
 			So(err, ShouldBeNil)
 			ol, err := dt.initStorageDriver()
 			So(err, ShouldBeNil)
@@ -501,7 +510,9 @@ func initDockerTransformTest(repalceVar, id, src, dest string, initIsuladTool bo
 	}
 	if initIsuladTool {
 		graph := filepath.Join(repalceVar + "/lib/isulad")
-		_ = isulad.InitIsuladTool(graph, "", "", "")
+		_ = isulad.InitIsuladTool(&isulad.DaemonConfig{
+			Graph: graph,
+		})
 		return isulad.GetIsuladTool().PrepareBundleDir(id)
 	}
 	return nil
