@@ -24,6 +24,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/sys/unix"
+	"isula.org/isula-transform/pkg/isulad/internal/isuladimg"
 	"isula.org/isula-transform/transform"
 	"isula.org/isula-transform/types"
 )
@@ -36,19 +37,32 @@ const (
 
 	initMask int = 0022
 
-	defaultISuladGraphPath = "/var/lib/isulad"
+	defaultIsuladGraphPath = "/var/lib/isulad"
+	defaultIsuladStatePath = "/var/run/isulad"
 	defaultRuntime         = "lcr"
 	defaultStorageDriver   = "overlay2"
 )
 
 var (
-	commonTool *IsuladTool
+	commonTool *Tool
 )
 
-// IsuladTool contains the common functions used by transformer
-type IsuladTool struct {
-	graphRoot string
-	runtime   string
+// DaemonConfig maps the daemon config of isulad
+type DaemonConfig struct {
+	Graph           string   `json:"graph"`
+	State           string   `json:"state"`
+	Runtime         string   `json:"default-runtime"`
+	LogLevel        string   `json:"log-level"`
+	LogDriver       string   `json:"log-driver"`
+	StorageDriver   string   `json:"storage-driver"`
+	StorageOpts     []string `json:"storage-opts"`
+	ImageLayerCheck bool     `json:"image-layer-check"`
+}
+
+// Tool contains the common functions used by transformer
+type Tool struct {
+	graph   string
+	runtime string
 
 	// storage
 	storageType   transform.StorageType
@@ -60,20 +74,23 @@ func init() {
 }
 
 // InitIsuladTool initializes the global iSuladCfgTool with the given parameters
-func InitIsuladTool(graphRoot, runtime, storageDriver, imageSrvAddr string) error {
-	if graphRoot == "" {
-		graphRoot = defaultISuladGraphPath
+func InitIsuladTool(conf *DaemonConfig) error {
+	if conf.Graph == "" {
+		conf.Graph = defaultIsuladGraphPath
 	}
-	if runtime == "" {
-		runtime = defaultRuntime
+	if conf.State == "" {
+		conf.State = defaultIsuladStatePath
 	}
-	if storageDriver == "" {
-		storageDriver = defaultStorageDriver
+	if conf.Runtime == "" {
+		conf.Runtime = defaultRuntime
 	}
-	commonTool = &IsuladTool{
-		graphRoot:   graphRoot,
-		runtime:     runtime,
-		storageType: transform.StorageType(storageDriver),
+	if conf.StorageDriver == "" {
+		conf.StorageDriver = defaultStorageDriver
+	}
+	commonTool = &Tool{
+		graph:       conf.Graph,
+		runtime:     conf.Runtime,
+		storageType: transform.StorageType(conf.StorageDriver),
 	}
 
 	if err := checkToolConfigValid(); err != nil {
@@ -81,30 +98,31 @@ func InitIsuladTool(graphRoot, runtime, storageDriver, imageSrvAddr string) erro
 		return errors.Wrap(err, "config of iSuladTool is invalid")
 	}
 
-	if err := initBaseStorageDriver(imageSrvAddr); err != nil {
-		logrus.Errorf("init global base storage driver failed: %v", err)
-		return errors.Wrap(err, "init global base storage driver failed")
+	if err := isuladimg.InitLib(conf.Graph, conf.State,
+		conf.StorageDriver, conf.StorageOpts, conf.ImageLayerCheck); err != nil {
+		logrus.Errorf("init base storage driver failed: %v", err)
+		return errors.Wrap(err, "init base storage driver failed")
 	}
 
-	commonTool.storageDriver = globalIsuladStorageDriver
+	commonTool.storageDriver = &isuladStorageDriver{}
 
 	return nil
 }
 
-// GetIsuladCfgTool returns the global isuladtool
-func GetIsuladTool() *IsuladTool {
+// GetIsuladTool returns the global isuladtool
+func GetIsuladTool() *Tool {
 	return commonTool
 }
 
 func checkToolConfigValid() error {
 	g := GetIsuladTool()
-	// runtime
+
 	switch g.runtime {
 	case defaultRuntime:
 	default:
 		return fmt.Errorf("not support runtime: %s", g.runtime)
 	}
-	// storage driver
+
 	switch g.storageType {
 	case transform.Overlay2, transform.DeviceMapper:
 	default:
@@ -114,27 +132,27 @@ func checkToolConfigValid() error {
 }
 
 // StorageType returns the storage type of isulad
-func (ict *IsuladTool) StorageType() transform.StorageType {
+func (ict *Tool) StorageType() transform.StorageType {
 	return ict.storageType
 }
 
 // BaseStorageDriver returns the global base storage driver tool
-func (ict *IsuladTool) BaseStorageDriver() transform.BaseStorageDriver {
+func (ict *Tool) BaseStorageDriver() transform.BaseStorageDriver {
 	return ict.storageDriver
 }
 
 // Runtime returns the runtime of isulad used
-func (ict *IsuladTool) Runtime() string {
+func (ict *Tool) Runtime() string {
 	return ict.runtime
 }
 
 // GetRuntimePath returns the default runtime path of isulad
-func (ict *IsuladTool) GetRuntimePath() string {
-	return filepath.Join(ict.graphRoot, "engines", ict.runtime)
+func (ict *Tool) GetRuntimePath() string {
+	return filepath.Join(ict.graph, "engines", ict.runtime)
 }
 
 // PrepareBundleDir creates runtime root dir of the container
-func (ict *IsuladTool) PrepareBundleDir(id string) error {
+func (ict *Tool) PrepareBundleDir(id string) error {
 	path := filepath.Join(ict.GetRuntimePath(), id)
 	_, err := os.Stat(path)
 	if err == nil || os.IsExist(err) {
@@ -144,22 +162,22 @@ func (ict *IsuladTool) PrepareBundleDir(id string) error {
 }
 
 // GetHostCfgPath returns path of hostconfig.json
-func (ict *IsuladTool) GetHostCfgPath(id string) string {
+func (ict *Tool) GetHostCfgPath(id string) string {
 	return filepath.Join(ict.GetRuntimePath(), id, types.Hostconfig)
 }
 
 // GetConfigV2Path returns path of config.v2.json
-func (ict *IsuladTool) GetConfigV2Path(id string) string {
+func (ict *Tool) GetConfigV2Path(id string) string {
 	return filepath.Join(ict.GetRuntimePath(), id, types.V2config)
 }
 
 // GetOciConfigPath returns path of config.json
-func (ict *IsuladTool) GetOciConfigPath(id string) string {
+func (ict *Tool) GetOciConfigPath(id string) string {
 	return filepath.Join(ict.GetRuntimePath(), id, types.Ociconfig)
 }
 
 // GetNetworkFilePath returns the path specified file in host, hostname and resolv.conf
-func (ict *IsuladTool) GetNetworkFilePath(id, file string) string {
+func (ict *Tool) GetNetworkFilePath(id, file string) string {
 	return filepath.Join(ict.GetRuntimePath(), id, file)
 }
 
@@ -170,7 +188,7 @@ type ReadData func(src interface{}) ([]byte, error)
 type FilePath func(string) string
 
 // SaveConfig allows isuladTool to save data to file
-func (ict *IsuladTool) SaveConfig(id string, src interface{}, read ReadData, getPath FilePath) error {
+func (ict *Tool) SaveConfig(id string, src interface{}, read ReadData, getPath FilePath) error {
 	path := getPath(id)
 
 	_, err := os.Stat(path)
@@ -200,18 +218,18 @@ func (ict *IsuladTool) SaveConfig(id string, src interface{}, read ReadData, get
 }
 
 // MarshalIndent formats the json bytes with indent
-func (ict *IsuladTool) MarshalIndent(src interface{}) (bytes []byte, e error) {
+func (ict *Tool) MarshalIndent(src interface{}) (bytes []byte, e error) {
 	return json.MarshalIndent(src, "", "\t")
 }
 
 // Cleanup remove runtime root dir of the container
-func (ict *IsuladTool) Cleanup(id string) error {
+func (ict *Tool) Cleanup(id string) error {
 	path := filepath.Join(ict.GetRuntimePath(), id)
 	return os.RemoveAll(path)
 }
 
 // PrepareShm creates sharm shm mount point for container
-func (ict *IsuladTool) PrepareShm(path string, size int64) error {
+func (ict *Tool) PrepareShm(path string, size int64) error {
 	err := os.MkdirAll(path, mountsDirMode)
 	if err != nil {
 		return err
@@ -225,6 +243,6 @@ func (ict *IsuladTool) PrepareShm(path string, size int64) error {
 }
 
 // LcrCreate calls lcr interface to init isulad container
-func (ict *IsuladTool) LcrCreate(id string, spec []byte) error {
+func (ict *Tool) LcrCreate(id string, spec []byte) error {
 	return lcrCreate(id, ict.GetRuntimePath(), spec)
 }

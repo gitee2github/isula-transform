@@ -13,8 +13,6 @@
 package transform
 
 import (
-	"time"
-
 	"isula.org/isula-transform/types"
 )
 
@@ -23,10 +21,8 @@ type StorageType string
 
 // support storage driver
 const (
-	Overlay2         StorageType = "overlay2"
-	DeviceMapper     StorageType = "devicemapper"
-	defaultAddress               = "unix:///var/run/isuald/isula_image.sock"
-	isuladImgTimeout             = 10 * time.Second
+	Overlay2     StorageType = "overlay2"
+	DeviceMapper StorageType = "devicemapper"
 )
 
 // StorageDriver defines methods for creating and rolling storage resources
@@ -43,6 +39,6 @@ type StorageDriver interface {
 type BaseStorageDriver interface {
 	GenerateRootFs(id, image string) (string, error)
 	CleanupRootFs(id string)
-	MountRootFs(id string) error
-	UmountRootFs(id string) error
+	MountRootFs(id, image string) error
+	UmountRootFs(id, image string) error
 }

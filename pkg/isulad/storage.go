@@ -13,133 +13,39 @@
 package isulad
 
 import (
-	"context"
-	"fmt"
-	"net"
-	"strings"
-	"time"
-
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	"google.golang.org/grpc"
-	"isula.org/isula-transform/api/isula"
-	"isula.org/isula-transform/transform"
+	"isula.org/isula-transform/pkg/isulad/internal/isuladimg"
 )
 
-const (
-	defaultAddress   = "unix:///var/run/isuald/isula_image.sock"
-	isuladImgTimeout = 10 * time.Second
-)
+type isuladStorageDriver struct{}
 
-var (
-	globalIsuladStorageDriver transform.BaseStorageDriver
-)
-
-type isuladStorageDriver struct {
-	imgClient isula.ImageServiceClient
-}
-
-func initBaseStorageDriver(addr string) error {
-	client, err := newIsuladImgClient(addr)
-	if err != nil {
-		return err
-	}
-	globalIsuladStorageDriver = &isuladStorageDriver{imgClient: client}
-	return nil
-}
-
-// GenerateRootFs returns a new rootfs path of container
 func (sd *isuladStorageDriver) GenerateRootFs(id, image string) (string, error) {
-	req := &isula.ContainerPrepareRequest{
-		Image: image,
-		Id:    id,
-		Name:  id,
+	mountPoint := isuladimg.PrepareRootfs(id, image)
+	if mountPoint == "" {
+		return "", errors.New("isuladimg returns nil rootfs")
 	}
-	resp, err := sd.imgClient.ContainerPrepare(context.Background(), req)
-	if err != nil {
-		return "", err
-	}
-	if msg := resp.GetErrmsg(); msg != "" {
-		removeReq := &isula.ContainerRemoveRequest{
-			NameId: id,
-		}
-		rResp, rErr := sd.imgClient.ContainerRemove(context.Background(), removeReq)
-		logrus.Infof("isulad-img remove container: %v, err: %v", rResp, rErr)
-		return "", fmt.Errorf("isulad-img prepare failed: %s", msg)
-	}
-	return resp.MountPoint, nil
+	return mountPoint, nil
 }
 
-// CleanupRootFs cleans up container data storaged in the isulad
 func (sd *isuladStorageDriver) CleanupRootFs(id string) {
-	req := &isula.ContainerRemoveRequest{
-		NameId: id,
-	}
-	// During the rollback, only information is collected
-	_, err := sd.imgClient.ContainerRemove(context.Background(), req)
-	if err != nil {
-		logrus.Warnf("isulad-img remove container %s: %v", id, err)
+	if ret := isuladimg.SwitchOperation(isuladimg.RemoveOp, id, ""); ret != 0 {
+		logrus.Warnf("remove container %s's rootfs get code: %d", id, ret)
 	} else {
-		logrus.Infof("isulad-img remove container %s successful", id)
+		logrus.Infof("remove container %s's rootfs successful", id)
 	}
 }
 
-// MountRootFs mounts the rw layer of container
-func (sd *isuladStorageDriver) MountRootFs(id string) error {
-	req := &isula.ContainerMountRequest{
-		NameId: id,
-	}
-	resp, err := sd.imgClient.ContainerMount(context.Background(), req)
-	if err != nil {
-		return err
-	}
-	if msg := resp.GetErrmsg(); msg != "" {
-		return fmt.Errorf("isulad-img mount failed: %s", msg)
+func (sd *isuladStorageDriver) MountRootFs(id, image string) error {
+	if ret := isuladimg.SwitchOperation(isuladimg.MountOp, id, image); ret != 0 {
+		return errors.Errorf("mount container %s's rootfs get ret code: %d", id, ret)
 	}
 	return nil
 }
 
-// UmountRootFs umounts the rw layer of container
-func (sd *isuladStorageDriver) UmountRootFs(id string) error {
-	req := &isula.ContainerUmountRequest{
-		NameId: id,
-	}
-	resp, err := sd.imgClient.ContainerUmount(context.Background(), req)
-	if err != nil {
-		return err
-	}
-	if msg := resp.GetErrmsg(); msg != "" {
-		req.Force = true
-		fResp, fErr := sd.imgClient.ContainerUmount(context.Background(), req)
-		logrus.Infof("isulad-img force umount container: %v, err: %v", fResp, fErr)
-		if fErr == nil && fResp.GetErrmsg() == "" {
-			return nil
-		}
-		return fmt.Errorf("isulad-img umount failed: %s", msg)
+func (sd *isuladStorageDriver) UmountRootFs(id, image string) error {
+	if ret := isuladimg.SwitchOperation(isuladimg.UmountOp, id, image); ret != 0 {
+		return errors.Errorf("umount container %s's rootfs get ret code: %d", id, ret)
 	}
 	return nil
-}
-
-func dialOpt(ctx context.Context, addr string) (net.Conn, error) {
-	// dialer to support unix dial
-	dialer := func(addr string, timeout time.Duration) (net.Conn, error) {
-		proto, address := "unix", strings.TrimPrefix(addr, "unix://")
-		return net.DialTimeout(proto, address, timeout)
-	}
-	if deadline, ok := ctx.Deadline(); ok {
-		return dialer(addr, time.Until(deadline))
-	}
-	return dialer(addr, isuladImgTimeout)
-}
-
-func newIsuladImgClient(addr string, opts ...grpc.DialOption) (isula.ImageServiceClient, error) {
-	if addr == "" {
-		addr = defaultAddress
-	}
-	opts = append(opts, grpc.WithInsecure(), grpc.WithContextDialer(dialOpt))
-	conn, err := grpc.Dial(addr, opts...)
-	if err != nil {
-		return nil, err
-	}
-
-	return isula.NewImageServiceClient(conn), nil
 }

@@ -33,7 +33,6 @@ const (
 )
 
 type diffNode struct {
-	// parent    *diffNode
 	children  map[string]*diffNode
 	operation uint8
 	path      string
@@ -113,18 +112,15 @@ func (dm *deviceMapperDriver) GenerateRootFs(id, image string) (string, error) {
 }
 
 func (dm *deviceMapperDriver) TransformRWLayer(ctr *types.IsuladV2Config, oldRootFs string) error {
-	// mount
-	if err := dm.BaseStorageDriver.MountRootFs(ctr.CommonConfig.ID); err != nil {
+	if err := dm.BaseStorageDriver.MountRootFs(ctr.CommonConfig.ID, ctr.Image); err != nil {
 		return err
 	}
-	// umount
 	defer func() {
-		if err := dm.BaseStorageDriver.UmountRootFs(ctr.CommonConfig.ID); err != nil {
+		if err := dm.BaseStorageDriver.UmountRootFs(ctr.CommonConfig.ID, ctr.Image); err != nil {
 			logrus.Infof("device mapper umount rootfs failed: %v", err)
 		}
 	}()
 
-	// get diff
 	diff, err := dm.client.ContainerDiff(context.Background(), ctr.CommonConfig.ID)
 	if err != nil {
 		return err
@@ -136,14 +132,12 @@ func (dm *deviceMapperDriver) TransformRWLayer(ctr *types.IsuladV2Config, oldRoo
 		dest := ctr.CommonConfig.BaseFs + changes[idx].Path
 		switch changes[idx].Kind {
 		case addItem, changeItem:
-			// cp
 			destRoot := filepath.Dir(dest)
 			if err := exec.Command("cp", "-ra", src, destRoot).Run(); err != nil {
 				logrus.Errorf("device mapper copy %s to %s filed: %v", src, dest, err)
 				return err
 			}
 		case delItem:
-			// delete
 			if err := os.RemoveAll(dest); err != nil {
 				logrus.Errorf("device mapper remover %s filed: %v", dest, err)
 				return err
@@ -167,7 +161,6 @@ note: filter path which match bind mount in container
 */
 func (dm *deviceMapperDriver) changesFilter(changes []container.ContainerChangeResponseItem,
 	mounts map[string]types.Mount) []container.ContainerChangeResponseItem {
-	// create trie
 	t := newTrie()
 	for _, change := range changes {
 		if _, ok := mounts[change.Path]; ok {

@@ -74,7 +74,7 @@ func main() {
 
 func start(ctx *cli.Context) error {
 	logInit(ctx)
-	if err := transformInit(ctx); err != nil {
+	if err := transformInit(); err != nil {
 		return cli.NewExitError(err.Error(), exitInitErr)
 	}
 	return doTransform(ctx)
@@ -110,39 +110,31 @@ func transLogLevel(lvl string) logrus.Level {
 	return logrus.InfoLevel
 }
 
-func transformInit(ctx *cli.Context) error {
-	var iSuladCfg = struct {
-		Graph         string `json:"graph"`
-		State         string `json:"state"`
-		Runtime       string `json:"default-runtime"`
-		LogLevel      string `json:"log-level"`
-		LogDriver     string `json:"log-driver"`
-		StorageDriver string `json:"storage-driver"`
-		ImageServer   string `json:"image-server-sock-addr"`
-	}{}
+func transformInit() error {
+	var conf = isulad.DaemonConfig{}
 	if err := utils.CheckFileValid(isuladConfFIle); err != nil {
 		return errors.Wrapf(err, "check isulad daemon config failed")
 	}
-	iSuladCfgData, err := ioutil.ReadFile(isuladConfFIle)
+	confData, err := ioutil.ReadFile(isuladConfFIle)
 	if err != nil {
 		logrus.Errorf("read isulad daemon config failed: %v, file path: %s", err, isuladConfFIle)
 		return errors.Wrapf(err, "read isulad daemon config failed")
 	}
-	err = json.Unmarshal(iSuladCfgData, &iSuladCfg)
+	err = json.Unmarshal(confData, &conf)
 	if err != nil {
 		logrus.Errorf("unmarshal isulad daemon config failed: %v, file path: %s", err, isuladConfFIle)
 		return errors.Wrapf(err, "unmarshal isulad daemon config failed")
 	}
 
-	logrus.Debugf("isulad daemon config: %+v", iSuladCfg)
-	err = isulad.InitIsuladTool(iSuladCfg.Graph, iSuladCfg.Runtime, iSuladCfg.StorageDriver, iSuladCfg.ImageServer)
+	logrus.Debugf("isulad daemon config: %+v", conf)
+	err = isulad.InitIsuladTool(&conf)
 	if err != nil {
 		return errors.Wrapf(err, "transform init failed")
 	}
-	if iSuladCfg.LogDriver != "file" {
-		logrus.Infof("isula daemon log driver is %s, can't redirect to file", iSuladCfg.LogDriver)
+	if conf.LogDriver != "file" {
+		logrus.Infof("isula daemon log driver is %s, can't redirect to file", conf.LogDriver)
 	} else {
-		isulad.LcrLogInit(iSuladCfg.State, iSuladCfg.Runtime, iSuladCfg.LogLevel)
+		isulad.LcrLogInit(conf.State, conf.Runtime, conf.LogLevel)
 	}
 	return nil
 }
