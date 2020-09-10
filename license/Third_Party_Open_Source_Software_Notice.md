@@ -37,27 +37,27 @@ THE SOFTWARE.
 
 Software:  
 github.com/Microsoft/go-winio v0.4.14  
-Copyright notice:    
+Copyright notice:  
 Copyright (c) 2015 Microsoft  
 License: MIT  
 Please see above.
 
 Software:  
 github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5  
-Copyright notice:    
+Copyright notice:  
 Copyright (c) 2012, Neal van Veen (nealvanveen@gmail.com)  
 License: BSD-2-Clause-FreeBSD  
 Copyright (c) 2012, Neal van Veen (nealvanveen@gmail.com)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met: 
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer. 
+   list of conditions and the following disclaimer.
 2. Redistributions in binary form must reproduce the above copyright notice,
    this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution. 
+   and/or other materials provided with the distribution.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -295,7 +295,6 @@ Copyright 2015 Docker, Inc.
 License: Apache-2.0  
 Please see above.
 
-
 Software:  
 github.com/docker/go-units v0.4.0  
 Copyright notice:  
@@ -348,13 +347,6 @@ github.com/golang/mock v1.4.3
 Copyright notice:  
 Copyright 2010 Google Inc.  
 License: Apache-2.0  
-Please see above.
-
-Software:  
-github.com/golang/protobuf v1.4.0-rc.4.0.20200313231945-b860323f09d0  
-Copyright notice:  
-Copyright 2010 The Go Authors.  All rights reserved.  
-License: BSD-3-Clause  
 Please see above.
 
 Software:  
@@ -443,7 +435,7 @@ License: MIT
 Please see above.
 
 Software:  
-github.com/stretchr/testify v1.4.0 
+github.com/stretchr/testify v1.4.0  
 Copyright notice:  
 Copyright (c) 2012-2018 Mat Ryer and Tyler Bunnell  
 License: MIT  
@@ -525,19 +517,3 @@ Copyright notice:
 Copyright 2018 gotest.tools authors  
 License: Apache-2.0  
 Please see above.
-
-Software:  
-isulad-img  
-Copyright notice:  
-Copyright (c) Huawei Technologies Co., Ltd. 2019-2020. All rights reserved.  
-License: Mulan PSL v2  
-Please see license/LICENSE  
-Related files: api/isula/isula_image.proto
-
-Software:  
-Kubernetes  
-Copyright notice:  
-Copyright 2018 The Kubernetes Authors.  
-License: Apache-2.0  
-Please see above.  
-Related files: api/isula/isula_image.proto
