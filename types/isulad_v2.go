@@ -16,6 +16,7 @@ import "time"
 
 // Mount is mapped according to isulad's definition.
 type Mount struct {
+	Type        string `json:",omitempty"`
 	Destination string `json:",omitempty"`
 	Driver      string `json:",omitempty"`
 	Key         string `json:",omitempty"`
@@ -37,44 +38,37 @@ type HealthCheckCfg struct {
 	ExitOnUnhealthy bool
 }
 
-// LogConfig is mapped according to isulad's definition.
-type LogConfig struct {
-	LogFile       string `json:"log_file,,omitempty"`
-	LogFileSize   string
-	LogFileRotate uint64
-}
-
 // ContainerCfg is mapped according to isulad's definition.
 type ContainerCfg struct {
-	Hostname        string
-	DomainName      string `json:"DomainName,omitempty"`
-	User            string `json:"User,omitempty"`
-	AttachStdin     bool
-	AttachStdout    bool
-	AttachStderr    bool
-	ExposedPorts    map[string]struct{}
-	PublishService  string `json:"PublishService,omitempty"`
-	Tty             bool
-	OpenStdin       bool
-	StdinOnce       bool
-	Env             []string
-	Cmd             []string
-	ArgsEscaped     bool
-	NetworkDisabled bool
-	Image           string
-	Volume          map[string]struct{}
-	WorkingDir      string `json:"WorkingDir,omitempty"`
-	Entrypoint      []string
-	MacAddress      string `json:"MacAddress,omitempty"`
-	Onbuild         []string
-	Labels          map[string]string
-	Annotations     map[string]string
-	StopSignal      string `json:"StopSignal,omitempty"`
-	HealthCheck     *HealthCheckCfg
-	SystemContainer bool
-	NsChangeOpt     string
-	Mounts          map[string]string
-	LogConfig       *LogConfig
+	Hostname        string              `json:"hostname,omitempty"`
+	DomainName      string              `json:"DomainName,omitempty"`
+	User            string              `json:"User,omitempty"`
+	AttachStdin     bool                `json:"AttachStdin,omitempty"`
+	AttachStdout    bool                `json:"AttachStdout,omitempty"`
+	AttachStderr    bool                `json:"AttachStderr,omitempty"`
+	ExposedPorts    map[string]struct{} `json:"ExposedPorts,omitempty"`
+	PublishService  string              `json:"PublishService,omitempty"`
+	Tty             bool                `json:"Tty,omitempty"`
+	OpenStdin       bool                `json:"OpenStdin,omitempty"`
+	StdinOnce       bool                `json:"StdinOnce,omitempty"`
+	Env             []string            `json:"Env,omitempty"`
+	Cmd             []string            `json:"Cmd,omitempty"`
+	ArgsEscaped     bool                `json:"ArgsEscaped,omitempty"`
+	NetworkDisabled bool                `json:"NetworkDisabled,omitempty"`
+	Image           string              `json:"Image,omitempty"`
+	Volumes         map[string]struct{} `json:"Volumes,omitempty"`
+	WorkingDir      string              `json:"WorkingDir,omitempty"`
+	Entrypoint      []string            `json:"Entrypoint,omitempty"`
+	MacAddress      string              `json:"MacAddress,omitempty"`
+	Onbuild         []string            `json:"Onbuild,omitempty"`
+	Labels          map[string]string   `json:"Labels,omitempty"`
+	LogDriver       string              `json:"LogDriver,omitempty"`
+	Annotations     map[string]string   `json:"Annotations,omitempty"`
+	StopSignal      string              `json:"StopSignal,omitempty"`
+	HealthCheck     *HealthCheckCfg     `json:"Healthcheck,omitempty"`
+	SystemContainer bool                `json:"SystemContainer,omitempty"`
+	NsChangeOpt     string              `json:"NsChangeOpt,omitempty"`
+	Mounts          map[string]string   `json:"Mounts,omitempty"`
 }
 
 // HealthLog is mapped according to isulad's definition.
@@ -95,20 +89,20 @@ type HealthCfg struct {
 // ContainerState is mapped according to isulad's definition.
 type ContainerState struct {
 	Dead              bool       `json:"Dead,omitempty"`
-	RemovalInprogress bool       `json:"RemovalInprogress,omitempty"`
-	Restarting        bool       `json:"Restarting,omitempty"`
-	Running           bool       `json:"Running,omitempty"`
-	OOMKilled         bool       `json:"OomKilled,omitempty"`
-	Paused            bool       `json:"Paused,omitempty"`
-	Starting          bool       `json:"Starting,omitempty"`
 	Error             string     `json:"Error,omitempty"`
 	ExitCode          int        `json:"ExitCode,omitempty"`
 	FinishedAt        time.Time  `json:"FinishedAt,omitempty"`
+	OOMKilled         bool       `json:"OomKilled,omitempty"`
+	Paused            bool       `json:"Paused,omitempty"`
 	Pid               int        `json:"Pid,omitempty"`
 	PPid              int        `json:"PPid,omitempty"`
 	StartTime         uint64     `json:"StartTime,omitempty"`
 	PStartTime        uint64     `json:"PStartTime,omitempty"`
+	RemovalInprogress bool       `json:"RemovalInprogress,omitempty"`
+	Restarting        bool       `json:"Restarting,omitempty"`
+	Running           bool       `json:"Running,omitempty"`
 	StartedAt         time.Time  `json:"StartedAt,omitempty"`
+	Starting          bool       `json:"Starting,omitempty"`
 	Health            *HealthCfg `json:"Health,omitempty"`
 }
 
@@ -127,7 +121,6 @@ type CommonConfig struct {
 	ResolvConfPath         string           `json:"ResolvConfPath,omitempty"`
 	ShmPath                string           `json:"ShmPath,omitempty"`
 	LogPath                string           `json:"LogPath,omitempty"`
-	LogDriver              string           `json:"LogDriver,omitempty"`
 	BaseFs                 string           `json:"BaseFs,omitempty"`
 	MountPoints            map[string]Mount `json:"MountPoints,omitempty"`
 	Name                   string           `json:"Name"`

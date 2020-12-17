@@ -201,7 +201,7 @@ func Test_dockerConfigEngine_transformV2Config(t *testing.T) {
 							Cmd: []string{
 								"bash",
 							},
-							Labels: make(map[string]string),
+							Labels: nil,
 							Image:  "isulatransformtestcontainer:image",
 							Annotations: map[string]string{
 								"cgroup.dir":             "/isulad",
@@ -212,6 +212,7 @@ func Test_dockerConfigEngine_transformV2Config(t *testing.T) {
 								"native.umask":           "secure",
 								"rootfs.mount":           "/var/lib/isulad/mnt/rootfs",
 							},
+							LogDriver: "json-file",
 						},
 						Created:                time.Unix(1579744800, 000000000).Local(),
 						Image:                  "isulatransformtestcontainer:image",
@@ -224,7 +225,6 @@ func Test_dockerConfigEngine_transformV2Config(t *testing.T) {
 						OriginResolvConfPath:   "/var/lib/docker/containers/511e7f915e3f5dc09b36a49657125eea4b36a05f862ab3dd01e0b9b2/resolv.conf",
 						ShmPath:                tmpdir + "/lib/isulad/engines/lcr/511e7f915e3f5dc09b36a49657125eea4b36a05f862ab3dd01e0b9b2/mounts/shm",
 						LogPath:                "none",
-						LogDriver:              "json-file",
 						BaseFs:                 "newRootFS",
 						MountPoints:            make(map[string]types.Mount),
 						Name:                   "isulatransformtestcontainer",
