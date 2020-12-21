@@ -112,7 +112,7 @@ func Test_reconcileV2Config(t *testing.T) {
 		})
 
 		Convey("json-file log driver", func() {
-			expectCfg.CommonConfig.LogDriver = logDriverJSONFile
+			expectCfg.CommonConfig.Config.LogDriver = logDriverJSONFile
 			expectCfg.CommonConfig.LogPath = baseLcrPath + "/console.log"
 			expectCfg.CommonConfig.Config.Annotations["log.console.driver"] = logDriverJSONFile
 			expectCfg.CommonConfig.Config.Annotations["log.console.file"] = baseLcrPath + "/console.log"
@@ -161,7 +161,7 @@ func Test_reconcileV2Config(t *testing.T) {
 					"env":             "not retain",
 				},
 			}
-			expectCfg.CommonConfig.LogDriver = logDriverSyslog
+			expectCfg.CommonConfig.Config.LogDriver = logDriverSyslog
 			expectCfg.CommonConfig.Config.Annotations["log.console.driver"] = logDriverSyslog
 			expectCfg.CommonConfig.Config.Annotations["log.console.tag"] = "test"
 			expectCfg.CommonConfig.Config.Annotations["log.console.facility"] = "local1"
@@ -180,7 +180,7 @@ func Test_reconcileV2Config(t *testing.T) {
 					"tag": "test",
 				},
 			}
-			expectCfg.CommonConfig.LogDriver = defaultLogDriver
+			expectCfg.CommonConfig.Config.LogDriver = defaultLogDriver
 			expectCfg.CommonConfig.LogPath = defaultLogPath
 			expectCfg.CommonConfig.Config.Annotations["log.console.driver"] = defaultLogDriver
 			expectCfg.CommonConfig.Config.Annotations["log.console.file"] = defaultLogPath

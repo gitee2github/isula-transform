@@ -1,6 +1,6 @@
 NAME=isula-transform
 
-VERSION=0.9.0
+VERSION=0.9.1
 COMMIT=$(shell git rev-parse HEAD 2> /dev/null || true)
 
 BEP_DIR=/tmp/isula-transform-build-bep

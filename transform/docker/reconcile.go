@@ -85,7 +85,7 @@ func v2ConfigWithLogConfig(cfg *container.LogConfig, basePath string) v2ConfigRe
 			//   max-file、max-size、compress、labels、env、env-regex、tag
 			// isulad only support:
 			//   max-file, max-size
-			v2.CommonConfig.LogDriver = logDriverJSONFile
+			v2.CommonConfig.Config.LogDriver = logDriverJSONFile
 			v2.CommonConfig.Config.Annotations["log.console.driver"] = logDriverJSONFile
 			v2.CommonConfig.LogPath = filepath.Join(basePath, "console.log")
 			v2.CommonConfig.Config.Annotations["log.console.file"] = v2.CommonConfig.LogPath
@@ -100,7 +100,7 @@ func v2ConfigWithLogConfig(cfg *container.LogConfig, basePath string) v2ConfigRe
 				v2.CommonConfig.Config.Annotations["log.console.filesize"] = defaultLogSize
 			}
 		case logDriverSyslog:
-			v2.CommonConfig.LogDriver = logDriverSyslog
+			v2.CommonConfig.Config.LogDriver = logDriverSyslog
 			v2.CommonConfig.Config.Annotations["log.console.driver"] = logDriverSyslog
 			// docker allowed LogOpts:
 			//   env, env-regex, labels, syslog-facility, tag, syslog-format
@@ -115,8 +115,8 @@ func v2ConfigWithLogConfig(cfg *container.LogConfig, basePath string) v2ConfigRe
 			}
 		default:
 			// use isulad default driver without file
-			v2.CommonConfig.LogDriver = defaultLogDriver
 			v2.CommonConfig.LogPath = defaultLogPath
+			v2.CommonConfig.Config.LogDriver = defaultLogDriver
 			v2.CommonConfig.Config.Annotations["log.console.driver"] = defaultLogDriver
 			v2.CommonConfig.Config.Annotations["log.console.file"] = defaultLogPath
 			v2.CommonConfig.Config.Annotations["log.console.filerotate"] = defaultLogRotate
