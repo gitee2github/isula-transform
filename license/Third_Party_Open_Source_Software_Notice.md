@@ -8,8 +8,7 @@ THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL
 
 **Copyright Notice and License Texts**
 
-Software:  
-github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78  
+Software: vendor/github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78  
 Copyright notice:  
 Copyright (c) 2015 Microsoft Corporation  
 License: MIT  
@@ -35,15 +34,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-Software:  
-github.com/Microsoft/go-winio v0.4.14  
+Software: vendor/github.com/Microsoft/go-winio v0.4.14  
 Copyright notice:  
 Copyright (c) 2015 Microsoft  
 License: MIT  
 Please see above.
 
-Software:  
-github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5  
+Software: vendor/github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5  
 Copyright notice:  
 Copyright (c) 2012, Neal van Veen (nealvanveen@gmail.com)  
 License: BSD-2-Clause-FreeBSD  
@@ -74,8 +71,7 @@ The views and conclusions contained in the software and documentation are those
 of the authors and should not be interpreted as representing official policies, 
 either expressed or implied, of the FreeBSD Project.
 
-Software:  
-github.com/docker/distribution v2.7.1+incompatible  
+Software: vendor/github.com/docker/distribution v2.7.1+incompatible  
 Copyright notice:  
 Can not find in the repository.  
 License: Apache-2.0  
@@ -281,29 +277,25 @@ Apache License
    See the License for the specific language governing permissions and
    limitations under the License.
 
-Software:  
-github.com/docker/engine v0.0.0-20190822180741-9552f2b2fdde  
+Software: vendor/github.com/docker/engine v0.0.0-20190822180741-9552f2b2fdde  
 Copyright notice:  
 Copyright 2012-2017 Docker, Inc.  
 License: Apache-2.0  
 Please see above.
 
-Software:  
-github.com/docker/go-connections v0.4.0  
+Software: vendor/github.com/docker/go-connections v0.4.0  
 Copyright notice:  
 Copyright 2015 Docker, Inc.  
 License: Apache-2.0  
 Please see above.
 
-Software:  
-github.com/docker/go-units v0.4.0  
+Software: vendor/github.com/docker/go-units v0.4.0  
 Copyright notice:  
 Copyright 2015 Docker, Inc.  
 License: Apache-2.0  
 Please see above.
 
-Software:  
-github.com/gogo/protobuf v1.2.1  
+Software: vendor/github.com/gogo/protobuf v1.2.1  
 Copyright notice:  
 Copyright (c) 2013, The GoGo Authors. All rights reserved.  
 License: BSD-3-Clause  
@@ -342,57 +334,49 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Software:  
-github.com/golang/mock v1.4.3  
+Software: vendor/github.com/golang/mock v1.4.3  
 Copyright notice:  
 Copyright 2010 Google Inc.  
 License: Apache-2.0  
 Please see above.
 
-Software:  
-github.com/google/go-cmp v0.4.0  
+Software: vendor/github.com/google/go-cmp v0.4.0  
 Copyright notice:  
 Copyright (c) 2017 The Go Authors. All rights reserved.  
 License: BSD-3-Clause  
 Please see above.
 
-Software:  
-github.com/gorilla/mux v1.7.4  
+Software: vendor/github.com/gorilla/mux v1.7.4  
 Copyright notice:  
 Copyright (c) 2012-2018 The Gorilla Authors. All rights reserved.  
 License: BSD-3-Clause  
 Please see above.
 
-Software:  
-github.com/kr/pretty v0.1.0  
+Software: vendor/github.com/kr/pretty v0.1.0  
 Copyright notice:  
 Copyright 2012 Keith Rarick  
 License: MIT  
 Please see above.
 
-Software:  
-github.com/opencontainers/go-digest v1.0.0-rc1  
+Software: vendor/github.com/opencontainers/go-digest v1.0.0-rc1  
 Copyright notice:  
 Copyright 2017 Docker, Inc.  
 License: Apache-2.0  
 Please see above.
 
-Software:  
-github.com/opencontainers/image-spec v1.0.1  
+Software: vendor/github.com/opencontainers/image-spec v1.0.1  
 Copyright notice:  
 Copyright 2016 The Linux Foundation  
 License: Apache-2.0  
 Please see above.
 
-Software:  
-github.com/opencontainers/runtime-spec v1.0.1  
+Software: vendor/github.com/opencontainers/runtime-spec v1.0.1  
 Copyright notice:  
 Copyright 2015 The Linux Foundation.  
 License: Apache-2.0  
 Please see above.
 
-Software:  
-github.com/pkg/errors v0.9.1  
+Software: vendor/github.com/pkg/errors v0.9.1  
 Copyright notice:  
 Copyright (c) 2015, Dave Cheney \<dave@cheney.net\>  
 License:  BSD-2-Clause  
@@ -420,100 +404,136 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Software:  
-github.com/sirupsen/logrus v1.4.2  
+Software: vendor/github.com/sirupsen/logrus v1.4.2  
 Copyright notice:  
 Copyright (c) 2014 Simon Eskildsen  
 License: MIT  
 Please see above.
 
-Software:  
-github.com/smartystreets/goconvey v1.6.4  
+Software: vendor/github.com/smartystreets/goconvey v1.6.4  
 Copyright notice:  
 Copyright (c) 2016 SmartyStreets, LLC  
 License: MIT  
 Please see above.
 
-Software:  
-github.com/stretchr/testify v1.4.0  
+Software: vendor/github.com/stretchr/testify v1.4.0  
 Copyright notice:  
 Copyright (c) 2012-2018 Mat Ryer and Tyler Bunnell  
 License: MIT  
 Please see above.
 
-Software:  
-github.com/urfave/cli v1.22.4  
+Software: vendor/github.com/urfave/cli v1.22.4  
 Copyright notice:  
 Copyright (c) 2016 Jeremy Saenz & Contributors  
 License: MIT  
 Please see above.
 
-Software:  
-golang.org/x/net v0.0.0-20200222125558-5a598a2470a0  
+Software: vendor/golang.org/x/net v0.0.0-20200222125558-5a598a2470a0  
 Copyright notice:  
 Copyright (c) 2009 The Go Authors. All rights reserved.  
 License: BSD-3-Clause  
 Please see above.
 
-Software:  
-golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae  
+Software: vendor/golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae  
 Copyright notice:  
 Copyright (c) 2009 The Go Authors. All rights reserved.  
 License: BSD-3-Clause  
 Please see above.
 
-Software:  
-golang.org/x/text v0.3.2  
+Software: vendor/golang.org/x/text v0.3.2  
 Copyright notice:  
 Copyright (c) 2009 The Go Authors. All rights reserved.  
 License: BSD-3-Clause  
 Please see above.
 
-Software:  
-golang.org/x/time v0.0.0-20191024005414-555d28b269f0  
+Software: vendor/golang.org/x/time v0.0.0-20191024005414-555d28b269f0  
 Copyright notice:  
 Copyright (c) 2009 The Go Authors. All rights reserved.  
 License: BSD-3-Clause  
 Please see above.
 
-Software:  
-google.golang.org/genproto v0.0.0-20200212174721-66ed5ce911ce  
+Software: vendor/google.golang.org/genproto v0.0.0-20200212174721-66ed5ce911ce  
 Copyright notice:  
 Copyright 2019 Google LLC  
 License: Apache-2.0  
 Please see above.
 
-Software:  
-google.golang.org/grpc v1.29.0  
+Software: vendor/google.golang.org/grpc v1.29.0  
 Copyright notice:  
 Copyright 2017 gRPC authors.  
 License: Apache-2.0  
 Please see above.
 
-Software:  
-google.golang.org/protobuf v1.21.0  
+Software: vendor/google.golang.org/protobuf v1.21.0  
 Copyright notice:  
 Copyright (c) 2018 The Go Authors. All rights reserved.  
 License: BSD-3-Clause  
 Please see above.
 
-Software:  
-gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127  
+Software: vendor/gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127  
 Copyright notice:  
 Copyright (c) 2010-2013 Gustavo Niemeyer \<gustavo@niemeyer.net\>  
 License: BSD-2-Clause  
 Please see above.
 
-Software:  
-gopkg.in/natefinch/lumberjack.v2 v2.0.1-0.20190411184413-94d9e492cc53  
+Software: vendor/gopkg.in/natefinch/lumberjack.v2 v2.0.1-0.20190411184413-94d9e492cc53  
 Copyright notice:  
 Copyright (c) 2014 Nate Finch  
 License: MIT  
 Please see above.
 
-Software:  
-gotest.tools v2.2.0+incompatible  
+Software: vendor/gotest.tools v2.2.0+incompatible  
 Copyright notice:  
 Copyright 2018 gotest.tools authors  
 License: Apache-2.0  
 Please see above.
+
+Software: vendor/github.com/jtolds/gls v4.20.0+incompatible
+Copyright notice:
+Copyright (c) 2013, Space Monkey, Inc.
+License: MIT License
+Please see above
+
+Software: vendor/github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1
+Copyright notice:
+Copyright (c) 2013 Richard Musiol. All rights reserved.
+License: BSD 2-Clause "Simplified" License
+Please see above
+
+Software: vendor/github.com/shurcooL/sanitized_anchor_name v1.0.0
+Copyright notice:
+Copyright (c) 2015 Dmitri Shuralyov
+License: MIT License
+Please see above
+
+Software: vendor/github.com/konsorten/go-windows-terminal-sequences v1.0.1
+Copyright notice:
+Copyright (c) 2017 marvin + konsorten GmbH (open-source@konsorten.de)
+License: MIT License
+Please see above
+
+Software: vendor/github.com/smartystreets/assertions v0.0.0-20180927180507-b2de0cb4f26d
+Copyright notice:
+Copyright (c) 2016 SmartyStreets, LLC
+License: Apache License, BSD
+Permission is hereby granted, free of charge, to any person obtaining a copy 
+of this software and associated documentation files (the "Software"), to deal 
+in the Software without restriction, including without limitation the rights 
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+copies of the Software, and to permit persons to whom the Software is 
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all 
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE 
+SOFTWARE.
+
+NOTE: Various optional and subordinate components carry their own licensing
+requirements and restrictions.  Use of those components is subject to the terms
+and conditions outlined the respective license of each component.
